@@ -1,0 +1,18 @@
+---
+title: "DW Ex1 Basic Data Manipulation"
+author: "Barry Davis"
+date: "June 21, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Set up our environment
+
+```{r}
+library(tidyverse)
+```
+
+## Load the data into RStudio
