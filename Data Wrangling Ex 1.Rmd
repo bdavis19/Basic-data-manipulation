@@ -40,16 +40,20 @@ prodPurchases$company <- tolower(prodPurchases$company)
 
 # Test the regex, then change what matched for company names
 test <- grep(pattern = ".*\\ps$", prodPurchases$company)
-for(value in test) {prodPurchases[value,1] <- sub(pattern = ".*\\ps$", replacement = "Philips", x = prodPurchases[value,1])}
+for(value in test) {print(prodPurchases[value,1])}
+prodPurchases$company <- sub(pattern = ".*\\ps$", replacement = "Philips", x = prodPurchases$company)
 
 test <- grep(pattern = "^ak.*", prodPurchases$company)
-for(value in test) {prodPurchases[value,1] <- sub(pattern = "^ak.*", replacement = "Akzo", x = prodPurchases[value,1])}
+for(value in test) {print(prodPurchases[value,1])}
+prodPurchases$company <- sub(pattern = "^ak.*", replacement = "Akzo", x = prodPurchases$company)
 
 test <- grep(pattern = "^u.*", prodPurchases$company)
-for(value in test) {prodPurchases[value,1] <- sub(pattern = "^u.*", replacement = "Unilever", x = prodPurchases[value,1])}
+for(value in test) {print(prodPurchases[value,1])}
+prodPurchases$company <- sub(pattern = "^u.*", replacement = "Unilever", x = prodPurchases$company)
 
 test <- grep(pattern = "^v.*", prodPurchases$company)
-for(value in test) {prodPurchases[value,1] <- sub(pattern = "^v.*", replacement = "Van Houten", x = prodPurchases[value,1])}
+for(value in test) {print(prodPurchases[value,1])}
+prodPurchases$company <- sub(pattern = "^v.*", replacement = "Van Houten", x = prodPurchases$company)
 ```
 ```{r echo=FALSE}
 prodPurchases$company

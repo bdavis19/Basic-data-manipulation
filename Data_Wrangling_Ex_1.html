@@ -293,16 +293,45 @@ prodPurchases$company &lt;- tolower(prodPurchases$company)
 
 # Test the regex, then change what matched for company names
 test &lt;- grep(pattern = &quot;.*\\ps$&quot;, prodPurchases$company)
-for(value in test) {prodPurchases[value,1] &lt;- sub(pattern = &quot;.*\\ps$&quot;, replacement = &quot;Philips&quot;, x = prodPurchases[value,1])}
+for(value in test) {print(prodPurchases[value,1])}</code></pre>
+<pre><code>## [1] &quot;phillips&quot;
+## [1] &quot;phillips&quot;
+## [1] &quot;philips&quot;
+## [1] &quot;phllips&quot;
+## [1] &quot;phillps&quot;
+## [1] &quot;phillips&quot;
+## [1] &quot;phillips&quot;
+## [1] &quot;fillips&quot;
+## [1] &quot;phlips&quot;</code></pre>
+<pre class="r"><code>prodPurchases$company &lt;- sub(pattern = &quot;.*\\ps$&quot;, replacement = &quot;Philips&quot;, x = prodPurchases$company)
 
 test &lt;- grep(pattern = &quot;^ak.*&quot;, prodPurchases$company)
-for(value in test) {prodPurchases[value,1] &lt;- sub(pattern = &quot;^ak.*&quot;, replacement = &quot;Akzo&quot;, x = prodPurchases[value,1])}
+for(value in test) {print(prodPurchases[value,1])}</code></pre>
+<pre><code>## [1] &quot;akzo&quot;
+## [1] &quot;akzo&quot;
+## [1] &quot;akzo&quot;
+## [1] &quot;akz0&quot;
+## [1] &quot;ak zo&quot;
+## [1] &quot;akzo&quot;
+## [1] &quot;akzo&quot;</code></pre>
+<pre class="r"><code>prodPurchases$company &lt;- sub(pattern = &quot;^ak.*&quot;, replacement = &quot;Akzo&quot;, x = prodPurchases$company)
 
 test &lt;- grep(pattern = &quot;^u.*&quot;, prodPurchases$company)
-for(value in test) {prodPurchases[value,1] &lt;- sub(pattern = &quot;^u.*&quot;, replacement = &quot;Unilever&quot;, x = prodPurchases[value,1])}
+for(value in test) {print(prodPurchases[value,1])}</code></pre>
+<pre><code>## [1] &quot;unilver&quot;
+## [1] &quot;unilever&quot;
+## [1] &quot;unilever&quot;
+## [1] &quot;unilever&quot;</code></pre>
+<pre class="r"><code>prodPurchases$company &lt;- sub(pattern = &quot;^u.*&quot;, replacement = &quot;Unilever&quot;, x = prodPurchases$company)
 
 test &lt;- grep(pattern = &quot;^v.*&quot;, prodPurchases$company)
-for(value in test) {prodPurchases[value,1] &lt;- sub(pattern = &quot;^v.*&quot;, replacement = &quot;Van Houten&quot;, x = prodPurchases[value,1])}</code></pre>
+for(value in test) {print(prodPurchases[value,1])}</code></pre>
+<pre><code>## [1] &quot;van houten&quot;
+## [1] &quot;van houten&quot;
+## [1] &quot;van houten&quot;
+## [1] &quot;van houten&quot;
+## [1] &quot;van houten&quot;</code></pre>
+<pre class="r"><code>prodPurchases$company &lt;- sub(pattern = &quot;^v.*&quot;, replacement = &quot;Van Houten&quot;, x = prodPurchases$company)</code></pre>
 <pre><code>##  [1] &quot;Philips&quot;    &quot;Philips&quot;    &quot;Philips&quot;    &quot;Philips&quot;    &quot;Philips&quot;   
 ##  [6] &quot;Philips&quot;    &quot;Akzo&quot;       &quot;Akzo&quot;       &quot;Akzo&quot;       &quot;Akzo&quot;      
 ## [11] &quot;Akzo&quot;       &quot;Akzo&quot;       &quot;Akzo&quot;       &quot;Philips&quot;    &quot;Philips&quot;   
