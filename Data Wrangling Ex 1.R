@@ -26,3 +26,10 @@ prodPurchases <- mutate(prodPurchases, company_philips = ifelse(company == "Phil
 prodPurchases <- mutate(prodPurchases, company_akzo = ifelse(company == "Akzo", 1, 0))
 prodPurchases <- mutate(prodPurchases, company_van_houten = ifelse(company == "Van Houten", 1, 0))
 prodPurchases <- mutate(prodPurchases, company_unilever = ifelse(company == "Unilever", 1, 0))
+prodPurchases <- mutate(prodPurchases, product_smartphone = ifelse(product_category == "Smartphone", 1, 0))
+prodPurchases <- mutate(prodPurchases, product_tv = ifelse(product_category == "TV", 1, 0))
+prodPurchases <- mutate(prodPurchases, product_laptop = ifelse(product_category == "Laptop", 1, 0))
+prodPurchases <- mutate(prodPurchases, product_tablet = ifelse(product_category == "Tablet", 1, 0))
+
+# Write to csv
+write.csv(prodPurchases, "refine_clean.csv")

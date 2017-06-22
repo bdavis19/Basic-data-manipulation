@@ -2,17 +2,127 @@
 title: "DW Ex1 Basic Data Manipulation"
 author: "Barry Davis"
 date: "June 21, 2017"
-output: html_document
+output: 
+  html_document:
+    code_folding: none
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
 ## Set up our environment
+I'll be using some functions from dplyr and tidyr, so I will install the tidyverse package. This package includes dplyr and tidyr, along with other packages that can/may be helpful. 
 
 ```{r}
 library(tidyverse)
+library(knitr)
+library(kableExtra)
+options(knitr.table.format = "html")
 ```
 
 ## Load the data into RStudio
+Next, I load the data from the external Excel file that was provided into a data frame.
+```{r}
+prodPurchases <- read.csv("refine_original.csv", header = TRUE, sep = ",")
+```
+Let's take a peak and see what's inside.
+```{r echo=FALSE}
+kable(head(prodPurchases)) %>% 
+  kable_styling(bootstrap_options = c("striped","hover", "condensed"))
+```
+
+## Time to clean it up
+The names of the companies in this file were misspelled and had irregular capitalization. I will start by correcting those fields first. Regex can be a fickle beast, so I will first verify, then change.
+```{r}
+# Change to lowercase
+prodPurchases$company <- tolower(prodPurchases$company)
+
+# Test the regex, then change what matched for company names
+test <- grep(pattern = ".*\\ps$", prodPurchases$company)
+for(value in test) {prodPurchases[value,1] <- sub(pattern = ".*\\ps$", replacement = "Philips", x = prodPurchases[value,1])}
+
+test <- grep(pattern = "^ak.*", prodPurchases$company)
+for(value in test) {prodPurchases[value,1] <- sub(pattern = "^ak.*", replacement = "Akzo", x = prodPurchases[value,1])}
+
+test <- grep(pattern = "^u.*", prodPurchases$company)
+for(value in test) {prodPurchases[value,1] <- sub(pattern = "^u.*", replacement = "Unilever", x = prodPurchases[value,1])}
+
+test <- grep(pattern = "^v.*", prodPurchases$company)
+for(value in test) {prodPurchases[value,1] <- sub(pattern = "^v.*", replacement = "Van Houten", x = prodPurchases[value,1])}
+```
+```{r echo=FALSE}
+prodPurchases$company
+```
+
+Just for good measure, let's make sure we don't have any left over.
+```{r}
+prodPurchases %>% count(company)
+```
+
+
+Next, the product codes and product numbers need to be separated to make viewing and working with this data easier.
+```{r}
+prodPurchases <- separate(prodPurchases, Product.code...number, c("product_code", "product_number"), sep = "-")
+```
+```{r echo=FALSE}
+kable(head(select(prodPurchases, product_code, product_number))) %>% 
+  kable_styling(bootstrap_options = c("striped","hover", "condensed"))
+```
+
+
+## What's missing?
+Now I will add a column for product_category that's easier to read.
+```{r}
+prodPurchases$product_category <- sub(pattern = "^p$", replacement = "Smartphone", x = sub("^x$", "Laptop", sub("^v$", "TV", sub("^q$", "Tablet", prodPurchases$product_code))))
+```
+```{r echo=FALSE}
+kable(head(select(prodPurchases, product_code, product_category))) %>% 
+  kable_styling(bootstrap_options = c("striped","hover", "condensed"))
+```
+
+Now I'll add a column for geocoding called full_address
+```{r}
+prodPurchases <- prodPurchases %>% 
+  mutate(full_address = paste(address, city, country, sep = ","))
+```
+```{r echo=FALSE}
+kable(head(select(prodPurchases, address, city, country, full_address))) %>% 
+  kable_styling(bootstrap_options = c("striped","hover", "condensed"))
+```
+
+I will also add 8 more columns, all binary representing what companies or products are referenced in that record.
+```{r}
+prodPurchases <- mutate(prodPurchases, company_philips = ifelse(company == "Philips", 1, 0))
+prodPurchases <- mutate(prodPurchases, company_akzo = ifelse(company == "Akzo", 1, 0))
+prodPurchases <- mutate(prodPurchases, company_van_houten = ifelse(company == "Van Houten", 1, 0))
+prodPurchases <- mutate(prodPurchases, company_unilever = ifelse(company == "Unilever", 1, 0))
+prodPurchases <- mutate(prodPurchases, product_smartphone = ifelse(product_category == "Smartphone", 1, 0))
+prodPurchases <- mutate(prodPurchases, product_tv = ifelse(product_category == "TV", 1, 0))
+prodPurchases <- mutate(prodPurchases, product_laptop = ifelse(product_category == "Laptop", 1, 0))
+prodPurchases <- mutate(prodPurchases, product_tablet = ifelse(product_category == "Tablet", 1, 0))
+```
+```{r echo = FALSE}
+kable(prodPurchases %>% 
+  select(company, company_philips, company_akzo, company_unilever, company_van_houten) %>%
+    head()) %>% 
+  kable_styling(bootstrap_options = c("striped","hover", "condensed"))
+```
+```{r echo=FALSE}
+kable(prodPurchases %>% 
+  select(product_category, product_smartphone, product_tv, product_laptop, product_tablet) %>%
+    head()) %>% 
+  kable_styling(bootstrap_options = c("striped","hover", "condensed"))
+```
+
+## Finish up!
+Finally, write a new .csv file for review
+```{r}
+write.csv(prodPurchases, "refine_clean.csv")
+```
+
+
+
+
+
+
